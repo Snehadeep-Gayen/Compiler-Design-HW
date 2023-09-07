@@ -14,7 +14,7 @@ int syntaxError = 0;
 %%
 
  /*------COMMENTS---------*/
-"/*"([^\*]|(\*[^\/]))*"*/" { /* Ignore comment */ }
+"/*"([^\*]|(\*[^\/]))*|\*"*/" { /* Ignore comment */ }
 "//"[^\n]*\n { /* Ignore single line comment */ }
 
  /*-------BRACKETS-------*/

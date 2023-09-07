@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #define YYSTYPE char*
 #define TOKENDEBUG 0
-#include "hw1.v0.tab.h"
+#include "hw1.v1.tab.h"
 
 #define COPY_YYTEXT if(TOKENDEBUG) printf("got token %s\n", yytext); yylval = strdup(yytext);
 
@@ -14,7 +14,7 @@ int syntaxError = 0;
 %%
 
  /*------COMMENTS---------*/
-"/*"([^\*]|(\*[^\/]))*"*/" { /* Ignore comment */ }
+"/*"([^\*]|(\*[^\/]+))*"*/"|"/***/" { /* Ignore comment */ }
 "//"[^\n]*\n { /* Ignore single line comment */ }
 
  /*-------BRACKETS-------*/
@@ -26,6 +26,7 @@ int syntaxError = 0;
 "}" { COPY_YYTEXT; return BR3; }
 
  /*-------KEYWORDS-------*/
+"boolean"           { COPY_YYTEXT; return KW_BO; }
 "if"                { COPY_YYTEXT; return KW_IF; }
 "else"              { COPY_YYTEXT; return KW_EL; }
 "do"                { COPY_YYTEXT; return KW_DO; }

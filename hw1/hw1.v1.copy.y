@@ -31,9 +31,7 @@ char* concat(char* strArr[]){
         if(CONCATDEBUG) printf("%s ", strArr[i]);
         if(FORMAT_OUTPUT) if(strcmp(strArr[i], "}")==0) strcat(final, "\n");
         strcat(final, strArr[i]);
-        if(FORMAT_OUTPUT) 
-            if(strcmp(strArr[i], "{")==0||strcmp(strArr[i], ";")==0||strcmp(strArr[i],"}")==0) 
-                strcat(final, "\n");
+        if(FORMAT_OUTPUT) if(strcmp(strArr[i], "{")==0||strcmp(strArr[i], ";")==0) strcat(final, "\n");
         if(i!=n-1) strcat(final, " ");
     }
     if(CONCATDEBUG) printf("\n");
@@ -42,6 +40,7 @@ char* concat(char* strArr[]){
     return final;
 }
 %}
+
 %define parse.error detailed
 %token BL1 BR1 BL2 BR2 BL3 BR3
 %token KW_IF KW_EL KW_DO KW_WH KW_FR KW_CL KW_EX KW_PB KW_ST KW_VD KW_MN KW_SR KW_PR KW_RT KW_TR KW_FL KW_NW KW_IN KW_HD KW_TH KW_LN KW_BO
@@ -55,7 +54,7 @@ char* concat(char* strArr[]){
 
 
 
-Goal: MacroDefBlock MainClass TypeDeclarationBlock YYEOF { printf("%s%s\n%s", $1,$2,$3); }
+Goal: MacroDefBlock MainClass TypeDeclarationBlock { printf("%s%s\n%s", $1,$2,$3); }
     ;
 
 MacroDefBlock: /* empty */ { $$ = strdup(""); }
@@ -75,15 +74,15 @@ MainClass: KW_CL ID BL3
            }
 
 TypeDeclarationBlock: /* empty */ { $$ = strdup(""); }
-                    | TypeDeclarationBlock KW_CL ID BL3
+                    | KW_CL ID BL3
                         VarDeclarationBlock MethodDeclarationBlock
                       BR3 
-                       { char* arr[8] = {$1,$2,$3,$4,$5,$6,$7,NULL}; $$ = concat(arr); }
-                    | TypeDeclarationBlock KW_CL ID KW_EX ID BL3
+                       { char* arr[7] = {$1,$2,$3,$4,$5,$6,NULL}; $$ = concat(arr); }
+                    | KW_CL ID KW_EX ID BL3
                         VarDeclarationBlock MethodDeclarationBlock
                       BR3
                      {
-                        char* arr[10] = {$1,$2,$3,$4,$5,$6,$7,$8,$9,NULL};
+                        char* arr[9] = {$1,$2,$3,$4,$5,$6,$7,$8,NULL};
                         $$ = concat(arr);
                      } 
                     ;
@@ -98,11 +97,11 @@ Type: KW_IN BL2 BR2  { char* arr[4] = {$1,$2,$3,NULL}; $$ = concat(arr); }
     | ID  { $$ = $1; }
 
 MethodDeclarationBlock: /* empty */ { $$ = strdup(""); }
-                      | MethodDeclarationBlock KW_PB Type ID BL1 TypeArgumentList BR1 BL3
+                      | KW_PB Type ID BL1 TypeArgumentList BR1 BL3
                             VarDeclarationBlock StatementBlock KW_RT Expression OP_SEM
                         BR3
                         {
-                            char* arr[15] = {$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,NULL}; 
+                            char* arr[14] = {$1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,NULL}; 
                             $$ = concat(arr);
                         } 
                       ;
@@ -111,24 +110,20 @@ TypeArgumentList: /* empty */  { $$ = strdup(""); }
                 | NonEmptyTypeArgumentList  { $$ = $1; }
                 ;
 NonEmptyTypeArgumentList: Type ID  { char* arr[3] = {$1,$2,NULL}; $$ = concat(arr); }
-                        | NonEmptyTypeArgumentList OP_COM Type ID   
-                            { char* arr[5] = {$1,$2,$3,$4,NULL}; $$ = concat(arr); }
+                        | NonEmptyTypeArgumentList Type ID OP_COM  { char* arr[5] = {$1,$2,$3,$4,NULL}; $$ = concat(arr); }
                         ;
 
 StatementBlock: /* empty */ { $$ = strdup(""); }
-              | Statement StatementBlock  { char* arr[3] = {$1,$2,NULL}; $$ = concat(arr); }
+              | StatementBlock Statement  { char* arr[3] = {$1,$2,NULL}; $$ = concat(arr); }
               ;
 
 Statement: BL3 StatementBlock BR3  { char* arr[4] = {$1,$2,$3,NULL}; $$ = concat(arr); }
-         | KW_PR BL1 Expression BR1 OP_SEM { char* arr[6] = {$1,$2,$3,$4,$5,NULL}; $$ = concat(arr); }
+         | KW_PR BL1 Expression BR1 OP_SEM { char* arr[5] = {$1,$2,$3,$4,NULL}; $$ = concat(arr); }
          | ID OP_EQL Expression OP_SEM  { char* arr[5] = {$1,$2,$3,$4,NULL}; $$ = concat(arr); }
-         | ID BL2 Expression BR2 OP_EQL Expression OP_SEM  
-            { char* arr[8] = {$1,$2,$3,$4,$5,$6,$7,NULL}; $$ = concat(arr); }
+         | ID BL2 Expression BR2 OP_EQL Expression OP_SEM  { char* arr[8] = {$1,$2,$3,$4,$5,$6,$7,NULL}; $$ = concat(arr); }
          | KW_IF BL1 Expression BR1 Statement  { char* arr[6] = {$1,$2,$3,$4,$5,NULL}; $$ = concat(arr); }
-         | KW_IF BL1 Expression BR1 Statement KW_EL Statement  
-            { char* arr[8] = {$1,$2,$3,$4,$5,$6,$7,NULL}; $$ = concat(arr); }
-         | KW_DO Statement KW_WH BL1 Expression BR1 OP_SEM  
-            { char* arr[8] = {$1,$2,$3,$4,$5,$6,$7,NULL}; $$ = concat(arr); }
+         | KW_IF BL1 Expression BR1 Statement KW_EL Statement  { char* arr[8] = {$1,$2,$3,$4,$5,$6,$7,NULL}; $$ = concat(arr); }
+         | KW_DO Statement KW_WH BL1 Expression BR1 OP_SEM  { char* arr[8] = {$1,$2,$3,$4,$5,$6,$7,NULL}; $$ = concat(arr); }
          | KW_WH BL1 Expression BR1 Statement  { char* arr[6] = {$1,$2,$3,$4,$5,NULL}; $$ = concat(arr); }
          | ID BL1 ArgumentList BR1 OP_SEM  { char* arr[6] = {$1,$2,$3,$4,$5,NULL}; $$ = concat(arr); }
          ;
@@ -155,8 +150,7 @@ ArgumentList: /* empty */ { $$ = strdup(""); }
             | NonEmptyArgumentList  { $$ = $1; }
             ;
 NonEmptyArgumentList: Expression  { $$ = $1; }
-                    | NonEmptyArgumentList OP_COM Expression 
-                        { char* arr[4] = {$1,$2,$3,NULL}; $$ = concat(arr); }
+                    | NonEmptyArgumentList OP_COM Expression    { char* arr[4] = {$1,$2,$3,NULL}; $$ = concat(arr); }
 
 PrimaryExpression: INT { $$ = $1; }
                  | KW_TR { $$ = $1; }
