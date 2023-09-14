@@ -12,13 +12,12 @@ struct token* giveToken(char*, token_type);
     if(TOKENDEBUG) fprintf(stderr, "got token %s\n", yytext); \
     yylval = giveToken(yytext, TYPE); \
     return TYPE;
- // "/*"([^\*]|(\*[^\/]+))*"*/"|"/***/" { /* Ignore comment */ } 
-
 %}
 
 %%
 
  /*------COMMENTS---------*/
+"/*"([^\*]|(\*[^\/]+))*"*/"|"/***/" { /* Ignore comment */ } 
 "//"[^\n]*\n { /* Ignore single line comment */ }
 
  
@@ -76,7 +75,7 @@ struct token* giveToken(char*, token_type);
  /*------MISC-TOKENS-------*/
 [ \t\r\n]+ { }
  /*  <<EOF>> { COPY_YYTEXT(TK_EOF); } */
- . { printf("// Failed to parse macrojava code.\n"); exit(0); }
+. { printf("// Failed to parse macrojava code.\n"); exit(0); } 
 
 
 %%

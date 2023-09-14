@@ -314,12 +314,20 @@ struct token* __concat(struct token* l1, struct token* l2){
     return l1;
 }
 
+struct token* OPTIMISED__concat(struct token* head, struct token* tail, struct token* l2){
+    struct token* ptr2 = l2;
+    while(ptr2->nextToken!=NULL) ptr2 = ptr2->nextToken;
+    tail->nextToken = l2;
+    return ptr2;
+}
+
 struct token* concat(struct token* tokenArr[]){
     struct token* head = giveToken("HEAD", 0);
+    struct token* tail = head;
     int i=0;
     if(CONCATDEBUG) fprintf(stdout,"Concatenating: ");
     while(tokenArr[i]!=NULL){ 
-        head = __concat(head, tokenArr[i]);
+        tail = OPTIMISED__concat(head, tail, tokenArr[i]);
         if(CONCATDEBUG) fprintf(stdout,"%s ", tokenArr[i]->str);
         i++;
     }
