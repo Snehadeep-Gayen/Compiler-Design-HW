@@ -1,0 +1,14 @@
+1. Yes, as mentioned on Moodle, I've gzipped as CS21B078.P1.tar.gz
+2. Yes
+3. Yes
+4. Yes
+5. Yes
+6. Yes
+7. Yes
+8. No, full code has been written by me.
+9. Following are my assumptions: (Not specified in the question)
+(a) Integer can be either positive or negative
+    (b1) positive integers don't have a "+" preceding it
+    (b2) 0NUM is not a valid integer (as discussed in class, redundant 0s are not considered) where NUM is any string of (0|1|...|9)
+(b) I am also checking for overloading in the functions (Which is specified in the grammar of MacroJava).
+(c) I am not adding extra brackets around arguments in Macro expansions (similar to C macros) i.e. ADD(X,Y) = (X+Y) ans ADD(1+2,3+4) =====> (1+2+3+4)

@@ -30,8 +30,8 @@ This project contains implementations for Java compiler as part of the Compiler 
 4. Use `make clean` to remove generated files and binaries.
 
 ### Running the Compiler
-[*] Input must be a single file `input.java` in this directory.
-[*] Run the pipeline using the command:
+* Input must be a single file `input.java` in this directory.
+* Run the pipeline using the command:
 ```bash
 make run
 ```
